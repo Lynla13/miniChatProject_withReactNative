@@ -8,24 +8,23 @@ import { useCallback,useState,useEffect } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 const ChatScreen = ({navigation}) => {
-    const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ])
+const [messages, setMessages] = useState([]);
+
+useLayoutEffect(() => 
+  {
+    const unsubcribe = db.collection('chat').orderBy('createdAt','desc').onSnapshot(snapshot=>
+        setMessages(snapshot.docs.map(doc=>({
+      _id: doc.data()._id,
+      createdAt: doc.data().createdAt.toDate(),
+      text: doc.data().text,
+      user: doc.data().user,
+    }))))
+      return unsubcribe;
+  
   }, [])
 
-  const onSend = useCallback((messages = []) => {
+const onSend = useCallback((messages = []) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     const {
         _id,
@@ -44,43 +43,38 @@ const ChatScreen = ({navigation}) => {
 
 
     //Set LogOut Icon
-    useLayoutEffect(() => {
+ useLayoutEffect(() => {
       navigation.setOptions ({
             headerRight: () => 
                 (
-                        <TouchableOpacity onPress={signOut} style = {{
-                            marginRight:20,
-                            width: 100,
-                           
-                        }} >
-                          <Text style = {{
-                            fontSize: 20,
+                    <TouchableOpacity onPress={signOut} style = {{
+                        marginRight:20,
+                        width: 100,
+                      }} >
+                        <Text style = {{
+                          fontSize: 20,
                           }}> Đăng xuất</Text>
-                        </TouchableOpacity>
+                     </TouchableOpacity>
                  ),
             headerLeft: () => 
             (
                 <View style = {{
-                    marginLeft: 20,
                     width: 180,
-                    paddingTop: 18
-                }}>
-                    <Avatar
-                        rounded
-                        source={{
-                            uri: auth?.currentUser?.photoURL
-                        }}
-                    ></Avatar>
-                    <Text style = {{
-                            fontSize: 20,
-                        }}> {auth?.currentUser?.name}</Text>
+                  }}>
+                      <Text style = {{
+                              fontSize: 20,
+                              color: 'black',
+                        }}> {auth?.currentUser?.displayName}</Text>
                 </View>
-                
             )
       })
      }, [])
 
-    const signOut =()=>{
+
+
+
+
+ const signOut =()=>{
         auth.signOut().then(() => {
             navigation.replace ('Login')
           }).catch((error) => {
@@ -89,13 +83,13 @@ const ChatScreen = ({navigation}) => {
     }
   return (
     <GiftedChat
-    messages={messages}
-    showAvatarForEveryMessage = {true}
-    onSend={messages => onSend(messages)}
-    user={{
-      _id: auth?.currentUser?.email,
-      name :auth?.currentUser?.displayName,
-      avatar: auth?.currentUser?.photoURL,
+      messages={messages}
+      showAvatarForEveryMessage = {true}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: auth?.currentUser?.email,
+        name :auth?.currentUser?.displayName,
+        avatar: auth?.currentUser?.photoURL ? auth?.currentUser?.photoURL :"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg",
     }}
   />
   )

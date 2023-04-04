@@ -26,11 +26,10 @@ const LoginScreen = ({navigation}) => {
         const unsubcribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 var uid = user.uid;
-                alert ("hahahh")
                 navigation.replace ('Chat');
             } else {
             // User is signed out
-                navigation.canGoBack() &&navigation.popToTop();
+                navigation.canGoBack() && navigation.popToTop();
             }
         });
       return unsubcribe
