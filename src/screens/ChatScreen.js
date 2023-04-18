@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import {ImageBackground, View, Text } from 'react-native'
 import React from 'react'
 import { auth,db } from '../../firebase';
 import { useLayoutEffect } from 'react';
@@ -6,14 +6,18 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Avatar } from 'react-native-elements';
 import { useCallback,useState,useEffect } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { collection, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import AppStyle from '../themes';
 var CryptoJS = require("crypto-js");
 
 
   const ChatScreen = ({navigation,route}) => {
-  const {name, roomKey,imageURL }=route.params;
+  const {name, roomKey,imageURL, backImgURL}=route.params;
   const [messages, setMessages] = useState([]);
+  alert (backImgURL);
+  //Set background 
+  const image = {uri: backgroundImg ? backgroundImg:'https://images.alphacoders.com/905/905516.png'};
 
-  //Tạo hàm lấy ảnh background
   useLayoutEffect(() => 
     {
       const unsubcribe = db.collection(roomKey).orderBy('createdAt','desc').onSnapshot(snapshot=>
@@ -57,7 +61,7 @@ var CryptoJS = require("crypto-js");
                         }} >
                           <Text style = {{
                             fontSize: 20,
-                            }}> Xuất</Text>
+                            }}>Xuất</Text>
                       </TouchableOpacity>
                   ),
               headerLeft: () => 
@@ -67,7 +71,7 @@ var CryptoJS = require("crypto-js");
                     }}>
                        <Text style = {{
                             fontSize: 20,
-                            }}> {name}
+                            }}> {background}
                         </Text>
                   </View>
               ),
@@ -84,17 +88,21 @@ var CryptoJS = require("crypto-js");
             });
       }
     return (
-      <GiftedChat
-        messages={messages}
-        showAvatarForEveryMessage = {true}
-        renderUsernameOnMessage ={true}
-        onSend={messages => onSend(messages)}
-        user={{
-          _id: route.params.name,
-          name :route.params.name,
-          avatar: route.params.imageURL ? route.params.imageURL :"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg",
-      }}
-    />
+      <View style={{ backgroundColor: "#000000", flex: 1 }}>
+          <ImageBackground source={image} resizeMode="cover"  style={AppStyle.LoginStyles.backgroundImage} >
+          <GiftedChat
+              messages={messages}
+              showAvatarForEveryMessage = {true}
+              renderUsernameOnMessage ={true}
+              onSend={messages => onSend(messages)}
+              user={{
+                _id: route.params.name,
+                name :route.params.name,
+                avatar: route.params.imageURL ? route.params.imageURL :"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg",
+              }}
+           />
+          </ImageBackground>
+    </View>
     )
 }
 

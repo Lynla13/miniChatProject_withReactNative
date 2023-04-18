@@ -14,9 +14,8 @@ const LoginStyles = StyleSheet.create({
     },
     loginView :{
         flex:1,
-        alignContent: 'center',
-        backgroundColor: 'lightgreen'
-
+        justifyContent:'flex-start',
+        backgroundColor: 'lightgreen',
     },
     signupBtn: {
         width: '100%',
@@ -31,7 +30,6 @@ const LoginStyles = StyleSheet.create({
         alignContent: 'left',
         backgroundColor: 'lightblue',
         marginBottom: 10,
-        marginTop:-40,
         flexDirection:'row', 
         flexWrap:'wrap',
     },

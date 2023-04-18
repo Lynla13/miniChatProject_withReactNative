@@ -23,7 +23,7 @@ const CreateRoomScreen = ({navigation,route}) => {
     // Tạo một chức năng nkhi nhấn thì tạo 1 collection mới
 
     function createNewRoom () {
-        if (roomName == '' || roomKey =='' || key == '' || name =='') {
+        if (roomName == '' || roomKey =='' || key == '' ) {
             alert ('Vui lòng nhập đầy đủ thông tin');
         }else {
             createNewCollecs ();
@@ -47,7 +47,7 @@ const CreateRoomScreen = ({navigation,route}) => {
     db.collection (roomKey).add ({
         _id : '',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        text : 'Tên phòng: ' +roomName + '. Mã phòng: ' +roomKey,
+        text : 'Tên phòng: ' +roomName + '. Mã phòng: ' +roomKey+ '. Khóa:' +key ,
         user :{
             _id: name,
           name : name,
@@ -56,9 +56,10 @@ const CreateRoomScreen = ({navigation,route}) => {
     })
                 //Thêm thông tin tên phòng và ảnh nền vào config chung
     db.collection ('config').add ({
+                    key: key,
                     backImgURL: backImgURL,
                     roomName: roomName,
-                    roomkey: roomKey,
+                    roomkeyBase: roomKey,
                 })
     navigation.replace ('Login' ,{roomKey});
   }
