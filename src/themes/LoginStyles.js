@@ -26,7 +26,7 @@ const LoginStyles = StyleSheet.create({
     },
     profile:{
         width : '100%',
-        height: 90,
+        height: 120,
         alignContent: 'left',
         backgroundColor: 'lightblue',
         marginBottom: 10,
@@ -35,7 +35,7 @@ const LoginStyles = StyleSheet.create({
     },
     profileBoder:{
         borderRadius: 50,
-        marginTop: 10,
+        marginTop: 20,
         width : 70,
         height: 70,
         backgroundColor: 'lightgreen',

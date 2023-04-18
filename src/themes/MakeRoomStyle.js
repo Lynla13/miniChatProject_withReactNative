@@ -20,6 +20,7 @@ const MakeRoomStyle = StyleSheet.create({
         fontSize: 16,
         marginTop: 2,
         fontWeight: 600,
+        color: 'white'
      }
 });
 export default MakeRoomStyle;

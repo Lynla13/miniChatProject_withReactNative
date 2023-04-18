@@ -12,11 +12,34 @@ var CryptoJS = require("crypto-js");
 
 
   const ChatScreen = ({navigation,route}) => {
-  const {name, roomKey,imageURL, backImgURL}=route.params;
+  const {name, roomKey,imageURL, backImgURL,roomName,key}=route.params;
   const [messages, setMessages] = useState([]);
-  alert (backImgURL);
   //Set background 
-  const image = {uri: backgroundImg ? backgroundImg:'https://images.alphacoders.com/905/905516.png'};
+  const image = {uri: backImgURL ? backImgURL:''};
+  // Viết hàm mã hóa 
+  function encryptByDES(message, key) {
+    var keyHex = CryptoJS.enc.Utf8.parse(key);
+    var encrypted = CryptoJS.DES.encrypt(message, keyHex, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return encrypted.toString();
+  }
+
+  //Viết hàm giải mã
+  function decryptByDES(ciphertext, key) {
+    var keyHex = CryptoJS.enc.Utf8.parse(key);
+
+    var decrypted = CryptoJS.DES.decrypt({
+        ciphertext: CryptoJS.enc.Base64.parse(ciphertext)
+    }, keyHex, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  }
+
 
   useLayoutEffect(() => 
     {
@@ -24,7 +47,7 @@ var CryptoJS = require("crypto-js");
           setMessages(snapshot.docs.map(doc=>({
         _id: doc.data()._id,
         createdAt: doc.data().createdAt.toDate(),
-        text: doc.data().text,
+        text: decryptByDES(doc.data().text, key),
         user: doc.data().user,
       }))))
         return unsubcribe;
@@ -44,7 +67,7 @@ var CryptoJS = require("crypto-js");
           _id,
           createdAt,
           //Đưa mã hóa vào database
-          text,
+          text : encryptByDES(text, key),
           user
       })
     }, [])
@@ -56,27 +79,14 @@ var CryptoJS = require("crypto-js");
               headerRight: () => 
                   (
                       <TouchableOpacity onPress={signOut} style = {{
-                          marginRight:20,
-                          width: 100,
+                          marginRight:10,
                         }} >
                           <Text style = {{
-                            fontSize: 20,
-                            }}>Xuất</Text>
+                            fontSize: 16,
+                            }}>Đăng xuất</Text>
                       </TouchableOpacity>
                   ),
-              headerLeft: () => 
-              (
-                  <View style = {{
-                      width: 200,
-                    }}>
-                       <Text style = {{
-                            fontSize: 20,
-                            }}> {background}
-                        </Text>
-                  </View>
-              ),
-              title: ':' + roomKey
-
+              title: roomName + ':'+ roomKey
         })
       }, [])
 

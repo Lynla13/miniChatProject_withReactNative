@@ -19,7 +19,7 @@ const CreateRoomScreen = ({navigation,route}) => {
   const [backImgURL, setBackImgURL] = useState('')
   const [name, setName] = useState('');
   const [key, setKey] = useState('')
-  const image = {uri: backImgURL ? backImgURL:'https://images.alphacoders.com/905/905516.png'};
+  const image = {uri: backImgURL ? backImgURL:'https://vapa.vn/wp-content/uploads/2022/12/anh-thien-nhien-dep-3d-007.jpg'};
     // Tạo một chức năng nkhi nhấn thì tạo 1 collection mới
 
     function createNewRoom () {

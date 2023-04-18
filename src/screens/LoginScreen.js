@@ -24,7 +24,7 @@ const LoginScreen = ({navigation,route}) => {
   const [backImgURL, setBackImgURL] = useState('');
   const [key, setKey] = useState('')
 
-  const image = {uri: 'https://images.alphacoders.com/905/905516.png'};
+  const image = {uri: 'https://vapa.vn/wp-content/uploads/2022/12/anh-3d-thien-nhien.jpeg'};
   const imageAva = {uri: imageURL?imageURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg'};
 // truyền giá trị đi khi nhấn nút
 //Tạo một hàm lấy thông tin từ database chạy query
@@ -32,22 +32,28 @@ const LoginScreen = ({navigation,route}) => {
   const q = query (colRef, where ("roomkeyBase", "==",roomKey))
   const configChat = [];
 //get data
-    onSnapshot (q,(snapshot)=> {
-        let configRoom = [];
-        snapshot.docs.forEach((doc)=>{
-        configRoom.push ({roomkeyBase: doc.data().roomkeyBase, key: doc.data().key, backImgURL: doc.data().backImgURL, roomName: doc.data().roomName, })
-    })
-    configChat.push (configRoom[0].backImgURL,configRoom[0].roomName,configRoom[0].key);
-    setBackImgURL(configChat[0]);
-    setKey (configChat[2]);
-    setRoomName (configChat[1]);
-  })
-  
+    try {
+        onSnapshot (q,(snapshot)=> {
+            let configRoom = [];
+            snapshot.docs.forEach((doc)=>{
+            configRoom.push ({roomkeyBase: doc.data().roomkeyBase, key: doc.data().key, backImgURL: doc.data().backImgURL, roomName: doc.data().roomName, })
+        })
+        if (configRoom[0].backImgURL.length >= 1) {
+            configChat.push (configRoom[0].backImgURL,configRoom[0].roomName,configRoom[0].key);
+        }
+            //Kiểm tra nếu phòng có tồn tại
+            if (configChat[1] != null) {
+                setKey (configChat[2]);
+                setRoomName (configChat[1]);
+                setBackImgURL(configChat[0]);
+            }
+      })
+    } catch (e) {
+    console.log('Error')
+    }
+   
 
-
-
-
-// Kiểm tra xem người dùng có đang đăng nhập ko
+  // Kiểm tra xem người dùng có đang đăng nhập ko
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged((user) => {
             if (user) {
@@ -77,13 +83,11 @@ const LoginScreen = ({navigation,route}) => {
             if (snapshot.size == 0) {
                 alert ('Phòng không có sẵn!');
             } else {
-                navigation.replace ('Chat' ,{roomKey,name,imageURL,backImgURL})
+                navigation.replace ('Chat' ,{roomKey,name,imageURL,backImgURL,roomName,key})
             }
         })
     }
  }
-
-
 
 
   return (
