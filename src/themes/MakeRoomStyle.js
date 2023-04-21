@@ -19,8 +19,16 @@ const MakeRoomStyle = StyleSheet.create({
     inputLabel:{
         fontSize: 16,
         marginTop: 2,
-        fontWeight: 600,
+        fontWeight: 700,
         color: 'white'
-     }
+     },
+    textInput: {
+        color: 'white'
+    },
+    backgroundImage :{
+        flex: 1,
+        marginTop: -10,
+        paddingTop: 16,
+    }
 });
 export default MakeRoomStyle;

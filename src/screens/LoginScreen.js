@@ -24,8 +24,9 @@ const LoginScreen = ({navigation,route}) => {
   const [backImgURL, setBackImgURL] = useState('');
   const [key, setKey] = useState('')
 
-  const image = {uri: 'https://vapa.vn/wp-content/uploads/2022/12/anh-3d-thien-nhien.jpeg'};
+  const image = {uri: 'https://wallpaperaccess.com/full/1732382.jpg'};
   const imageAva = {uri: imageURL?imageURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg'};
+  const imageBv = {uri: backImgURL?backImgURL :'https://wallpapers.com/images/featured/rmzlyx15fhausbaf.jpg'}
 // truyền giá trị đi khi nhấn nút
 //Tạo một hàm lấy thông tin từ database chạy query
   const colRef = collection (db,'config')
@@ -36,11 +37,14 @@ const LoginScreen = ({navigation,route}) => {
         onSnapshot (q,(snapshot)=> {
             let configRoom = [];
             snapshot.docs.forEach((doc)=>{
-            configRoom.push ({roomkeyBase: doc.data().roomkeyBase, key: doc.data().key, backImgURL: doc.data().backImgURL, roomName: doc.data().roomName, })
+                if (doc.exists) {
+                    configRoom.push ({roomkeyBase: doc.data().roomkeyBase, key: doc.data().key, backImgURL: doc.data().backImgURL, roomName: doc.data().roomName, })
+                    configChat.push (configRoom[0].backImgURL,configRoom[0].roomName,configRoom[0].key);
+                }else {
+                    configRoom.push ({roomkeyBase: 'None', key: 'None', backImgURL: 'None', roomName: 'None', })
+                    configChat.push (configRoom[0].backImgURL,configRoom[0].roomName,configRoom[0].key);
+                }
         })
-        if (configRoom[0].backImgURL.length >= 1) {
-            configChat.push (configRoom[0].backImgURL,configRoom[0].roomName,configRoom[0].key);
-        }
             //Kiểm tra nếu phòng có tồn tại
             if (configChat[1] != null) {
                 setKey (configChat[2]);
@@ -96,20 +100,21 @@ const LoginScreen = ({navigation,route}) => {
         <ImageBackground source={image} resizeMode="cover"  style={AppStyle.LoginStyles.backgroundImage} >
         {/* Set Profile */}
         <View style = {AppStyle.LoginStyles.profile}>
-            <Image
-                style={AppStyle.LoginStyles.profileBoder}
-                source={imageAva}
-            />
-            <View>
-                <Text style= {AppStyle.LoginStyles.avaText} > @{name}</Text>
-                <Text style= {AppStyle.LoginStyles.subAvaText} > Mã phòng: {roomKey}</Text>
-                <Text style= {AppStyle.LoginStyles.subAvaText} > Tên phòng: {roomName}</Text>
-            </View>
+            <ImageBackground source={imageBv} resizeMode="cover"  style={AppStyle.LoginStyles. miniBackgroundImage} >
+                    <Image
+                        style={AppStyle.LoginStyles.profileBoder}
+                        source={imageAva}
+                    />
+                    <View>
+                        <Text style= {AppStyle.LoginStyles.avaText} > @{name}</Text>
+                        <Text style= {AppStyle.LoginStyles.subAvaText} > Mã phòng: {roomKey}</Text>
+                        <Text style= {AppStyle.LoginStyles.subAvaText} > Tên phòng: {roomName}</Text>
+                    </View>
+            </ImageBackground>
         </View>
-
-        
         <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Username: (*) </Text>
         <Input
+             style={AppStyle.MakeRoomStyle.textInput}
             placeholder='Nhập tên hiển thị của bạn'
             value= {name}
             onChangeText = {text => setName(text)}
@@ -117,13 +122,15 @@ const LoginScreen = ({navigation,route}) => {
 
         <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Mã phòng: (*) </Text>
         <Input
-            placeholder='Nhập mã phòng hoặc tạo mã phòng mới'
-            value= {roomKey}
+            style={AppStyle.MakeRoomStyle.textInput}
+            placeholder='Nhập mã phòng'
+            value= {roomKey  }
             onChangeText = {text => setRoomKey(text)}
         />
 
         <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Ảnh đại diện: (Tùy chọn) </Text>
         <Input
+            style={AppStyle.MakeRoomStyle.textInput}
             placeholder='Nhập đường dẫn ảnh đại diện'
             value= {imageURL}
             onChangeText = {text => setImageURL(text)}

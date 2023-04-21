@@ -27,11 +27,10 @@ const LoginStyles = StyleSheet.create({
     profile:{
         width : '100%',
         height: 120,
-        alignContent: 'left',
         backgroundColor: 'lightblue',
         marginBottom: 10,
-        flexDirection:'row', 
-        flexWrap:'wrap',
+        marginTop: -140,
+        
     },
     profileBoder:{
         borderRadius: 50,
@@ -39,7 +38,7 @@ const LoginStyles = StyleSheet.create({
         width : 70,
         height: 70,
         backgroundColor: 'lightgreen',
-        marginLeft: 10
+        marginLeft: 10,
     },
     avaText:{
         fontSize: 17,
@@ -53,6 +52,13 @@ const LoginStyles = StyleSheet.create({
         marginLeft: 20,
         marginTop: 10,
         fontWeight: 400,
+    },
+    miniBackgroundImage:{
+      marginTop: -10,
+      flex:1,
+      flexDirection:'row', 
+      flexWrap:'wrap',
+
     }
 });
 export default LoginStyles;

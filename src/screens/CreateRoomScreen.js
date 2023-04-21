@@ -19,7 +19,8 @@ const CreateRoomScreen = ({navigation,route}) => {
   const [backImgURL, setBackImgURL] = useState('')
   const [name, setName] = useState('');
   const [key, setKey] = useState('')
-  const image = {uri: backImgURL ? backImgURL:'https://vapa.vn/wp-content/uploads/2022/12/anh-thien-nhien-dep-3d-007.jpg'};
+  const image = {uri:'https://wallpaperaccess.com/full/1732382.jpg'};
+  const imageBv = {uri: backImgURL ? backImgURL:'https://wallpapers.com/images/featured/rmzlyx15fhausbaf.jpg'};
     // Tạo một chức năng nkhi nhấn thì tạo 1 collection mới
 
     function createNewRoom () {
@@ -43,21 +44,22 @@ const CreateRoomScreen = ({navigation,route}) => {
         })
     }
 
+//Mã hóa lời chào
   function makeAndJoinRoom() {
     db.collection (roomKey).add ({
         _id : '',
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        text : 'Tên phòng: ' +roomName + '. Mã phòng: ' +roomKey+ '. Khóa:' +key ,
+        text : '',
         user :{
             _id: name,
           name : name,
-          avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg",
+          avatar: "https://vothisaucamau.edu.vn/wp-content/uploads/2023/03/1678128344_301_Hinh-anh-Welcome-%E2%80%93-Hinh-nen-powerpoint-mo-dau-Slide.jpg",
         }
     })
                 //Thêm thông tin tên phòng và ảnh nền vào config chung
     db.collection ('config').add ({
                     key: key,
-                    backImgURL: backImgURL,
+                    backImgURL: backImgURL ? backImgURL : 'https://wallpapers.com/images/featured/rmzlyx15fhausbaf.jpg',
                     roomName: roomName,
                     roomkeyBase: roomKey,
                 })
@@ -66,10 +68,21 @@ const CreateRoomScreen = ({navigation,route}) => {
  
   return (
     <View style={AppStyle.LoginStyles.loginView}>
+
          <ImageBackground source={image} resizeMode="cover"  style={AppStyle.LoginStyles.backgroundImage} >
+         <View style = {AppStyle.LoginStyles.profile}>
+             <ImageBackground source={imageBv} resizeMode="cover"  style={AppStyle.MakeRoomStyle.backgroundImage} >
+                <View>
+                    <Text style= {AppStyle.LoginStyles.subAvaText} > Mã phòng: {roomKey}</Text>
+                    <Text style= {AppStyle.LoginStyles.subAvaText} > Tên phòng: {roomName}</Text>
+                    <Text style= {AppStyle.LoginStyles.subAvaText} > Khóa: {key}</Text>
+                </View>
+            </ImageBackground>
+        </View>
 
                 <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Tên phòng: (*) </Text>
                 <Input
+                    style={AppStyle.MakeRoomStyle.textInput}
                     placeholder='Nhập tên phòng'
                     value= {roomName}
                     onChangeText = {text => setRoomName(text)}
@@ -77,14 +90,15 @@ const CreateRoomScreen = ({navigation,route}) => {
 
                 <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Nhập mã phòng: (*)</Text>
                 <Input
+                    style={AppStyle.MakeRoomStyle.textInput}
                     placeholder='Nhập mã phòng hoặc tạo mã phòng mới'
                     value= {roomKey}
                     onChangeText = {text => setRoomKey(text)}
                 />
-
                
                 <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Nhập khóa: (*)</Text> 
                 <Input 
+                    style={AppStyle.MakeRoomStyle.textInput}
                     placeholder='Nhập mã khóa '
                     value= {key}
                     onChangeText = {text => setKey(text)}
@@ -92,12 +106,12 @@ const CreateRoomScreen = ({navigation,route}) => {
 
                  <Text style = {AppStyle.MakeRoomStyle.inputLabel}> Nhập đường dẫn ảnh:  (Tùy chọn)</Text> 
                 <Input
+                    style={AppStyle.MakeRoomStyle.textInput}
                     placeholder='Nhập đường dẫn ảnh'
                     value= {backImgURL}
                     onChangeText = {text => setBackImgURL(text)}
                 />
                 
-            
                 {/*Button*/}
                 <MashButton 
                     onPressFunction = {() => createNewRoom ()}

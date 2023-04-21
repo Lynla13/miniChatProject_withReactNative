@@ -9,6 +9,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import { collection, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import AppStyle from '../themes';
 var CryptoJS = require("crypto-js");
+import Toast from 'react-native-root-toast';
 
 
   const ChatScreen = ({navigation,route}) => {
@@ -70,6 +71,9 @@ var CryptoJS = require("crypto-js");
           text : encryptByDES(text, key),
           user
       })
+      Toast.show(encryptByDES(text, key), {
+        duration: Toast.durations.LONG,
+      });
     }, [])
 
 
